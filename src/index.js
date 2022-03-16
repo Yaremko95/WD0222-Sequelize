@@ -1,7 +1,7 @@
 import express from "express";
-import pool from "./utils/db.js";
+import User from "./db/models/user.js";
 import cors from "cors";
-import productsRouter from "./services/product.js";
+import { syncDB, testDB } from "./db/index.js";
 
 const server = express();
 
@@ -9,14 +9,14 @@ server.use(express.json());
 
 server.use(cors());
 
-server.use("/products", productsRouter);
-
 const { PORT = 5001 } = process.env;
 
 const initalize = async () => {
   try {
-    await pool.query("select 1+1;");
     server.listen(PORT, async () => {
+      await testDB();
+      await syncDB();
+
       console.log("✅ Server is listening on port " + PORT);
     });
 
