@@ -1,13 +1,18 @@
 import express from "express";
-import models from "./db/models/index.js";
+import * as models from "./db/models/index.js";
 import cors from "cors";
 import { testDB, syncDB } from "./db/index.js";
+import articlesRoute from "./services/articles/index.js";
+import usersRoute from "./services/users/index.js";
 
 const server = express();
 
 server.use(express.json());
 
 server.use(cors());
+
+server.use("/articles", articlesRoute);
+server.use("/users", usersRoute);
 
 const { PORT = 5001 } = process.env;
 
