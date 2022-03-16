@@ -1,7 +1,7 @@
 import express from "express";
-import User from "./db/models/user.js";
+import models from "./db/models/index.js";
 import cors from "cors";
-import { syncDB, testDB } from "./db/index.js";
+import { testDB, syncDB } from "./db/index.js";
 
 const server = express();
 
