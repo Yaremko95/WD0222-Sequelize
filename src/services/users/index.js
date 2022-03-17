@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { User, Article } from "../../db/models/index.js";
 import { users } from "../../data/users.js";
+import { col, fn } from "sequelize";
 
 const router = Router();
 
@@ -8,6 +9,41 @@ router.get("/", async (req, res, next) => {
   try {
     const data = await User.findAll({ include: Article });
     res.send(data);
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.get("/stats", async (req, res, next) => {
+  try {
+    //select total of users where country="Italy"
+    const total = await User.count({ where: { country: "Italy" } });
+
+    const oldestInTurkey = await User.max("age", {
+      where: { country: "Turkey" },
+    });
+
+    //group users by country
+    // select country, count(id)  from users group by country;
+
+    const totalByCountry = await User.findAll({
+      attributes: ["country", [fn("COUNT", col("id")), "total"]],
+      group: "country",
+    });
+
+    //get the oldest from each country
+    //select country, max(age) from users group by country
+
+    const oldestForEachCountry = await User.findAll({
+      attributes: ["country", [fn("MAX", col("age")), "oldestUser"]],
+      group: ["country"],
+    });
+
+    const youngestForEachCountry = await User.findAll({
+      attributes: ["country", [fn("min", col("age")), "oldestUser"]],
+      group: ["country"],
+    });
+
+    res.send({ oldestInTurkey });
   } catch (error) {
     console.log(error);
   }

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { col, fn } from "sequelize";
 import { Review, Article, User } from "../../db/models/index.js";
 
 const router = Router();
@@ -9,6 +10,23 @@ router.get("/", async (req, res, next) => {
       include: [User, { model: Article, include: User }],
     });
     res.send(reviews);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+router.get("/stats", async (req, res, next) => {
+  try {
+    //get total reviews for each user
+    // select "userId", count(r.id), name from reviews as r  join users as u on r."userId"=u.id group by "userId", u.id;
+
+    const totalForEachUser = await Review.findAll({
+      include: { model: User, attributes: ["id", "name"] },
+      attributes: ["userId", [fn("COUNT", col("review.id")), "totalUsers"]],
+      group: ["userId", "user.id"],
+    });
+    res.send({ totalForEachUser });
   } catch (error) {
     console.log(error);
     next(error);

@@ -1,6 +1,8 @@
 import Article from "./article.js";
 import User from "./user.js";
 import Review from "./review.js";
+import Category from "./category.js";
+import ArticleCategory from "./ArticleCategory.js";
 
 //defining relationship
 // 1. what methods to use? hasMany, belongsTo
@@ -16,4 +18,16 @@ Review.belongsTo(Article, { onDelete: "CASCADE" });
 User.hasMany(Review, { onDelete: "CASCADE" });
 Review.belongsTo(User, { onDelete: "CASCADE" });
 
-export { Article, User, Review };
+Article.belongsToMany(Category, { through: ArticleCategory });
+Category.belongsToMany(Article, { through: ArticleCategory });
+
+// If you want ID as a primary key
+
+// Category.belongsToMany(Article, {
+//   through: { model: ArticleCategory, unique: false },   /// to remove default COMPOSED PRIMARY KEY (categoryId, articleID)
+// });
+// Article.belongsToMany(Category, {
+//   through: { model: ArticleCategory, unique: false },
+// });
+
+export { Article, User, Review, Category, ArticleCategory };
