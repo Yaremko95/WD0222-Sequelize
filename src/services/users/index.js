@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { User, Article } from "../../db/models/index.js";
+import { users } from "../../data/users.js";
 
 const router = Router();
 
@@ -24,6 +25,15 @@ router.post("/", async (req, res, next) => {
   try {
     console.log(req.body);
     const newUser = await User.create(req.body);
+    res.send(newUser);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/bulk", async (req, res, next) => {
+  try {
+    const newUser = await User.bulkCreate(users);
     res.send(newUser);
   } catch (error) {
     console.log(error);

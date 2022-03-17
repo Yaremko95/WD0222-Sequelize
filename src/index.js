@@ -4,7 +4,7 @@ import cors from "cors";
 import { testDB, syncDB } from "./db/index.js";
 import articlesRoute from "./services/articles/index.js";
 import usersRoute from "./services/users/index.js";
-
+import reviewsRouter from "./services/reviews/index.js";
 const server = express();
 
 server.use(express.json());
@@ -13,6 +13,7 @@ server.use(cors());
 
 server.use("/articles", articlesRoute);
 server.use("/users", usersRoute);
+server.use("/reviews", reviewsRouter);
 
 const { PORT = 5001 } = process.env;
 
