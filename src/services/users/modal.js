@@ -1,4 +1,5 @@
-import sequelize from "../index.js";
+import sequelize from "../../db/index.js";
+
 import { DataTypes } from "sequelize";
 
 const User = sequelize.define(
@@ -9,15 +10,11 @@ const User = sequelize.define(
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
     },
-    name: {
+    firstName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -27,12 +24,11 @@ const User = sequelize.define(
     },
     country: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
-  },
-  {
-    timestamps: false,
   }
+  //   {
+  //     timestamps: false,
+  //   }
 );
 
 export default User;

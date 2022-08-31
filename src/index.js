@@ -1,30 +1,20 @@
 import express from "express";
-import * as models from "./db/models/index.js";
+import { authenticateDB, syncModels } from "./db/index.js";
 import cors from "cors";
-import { testDB, syncDB } from "./db/index.js";
-import articlesRoute from "./services/articles/index.js";
-import usersRoute from "./services/users/index.js";
-import reviewsRouter from "./services/reviews/index.js";
-import categoriesRouter from "./services/categories/index.js";
+import usersRouter from "./services/users/index.js";
+
 const server = express();
 
 server.use(express.json());
 
 server.use(cors());
-
-server.use("/articles", articlesRoute);
-server.use("/users", usersRoute);
-server.use("/reviews", reviewsRouter);
-server.use("/categories", categoriesRouter);
+server.use("/users", usersRouter);
 
 const { PORT = 5001 } = process.env;
 
 const initalize = async () => {
   try {
     server.listen(PORT, async () => {
-      await testDB();
-      await syncDB();
-
       console.log("✅ Server is listening on port " + PORT);
     });
 
@@ -37,4 +27,11 @@ const initalize = async () => {
   }
 };
 
-initalize();
+authenticateDB()
+  .then(async () => {
+    await syncModels();
+  })
+  .then(() => {
+    initalize();
+  })
+  .catch((e) => console.log(e));

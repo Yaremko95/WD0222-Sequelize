@@ -1,24 +1,26 @@
 import { Sequelize } from "sequelize";
 
-const { PGHOST, PGUSER, PGPORT, PGPASSWORD, PGDATABASE } = process.env;
+const { PGDATABASE, PGHOST, PGPORT, PGPASSWORD, PGUSER } = process.env;
 
 const sequelize = new Sequelize(PGDATABASE, PGUSER, PGPASSWORD, {
   host: PGHOST,
-  port: PGPORT,
   dialect: "postgres",
+  port: PGPORT,
 });
 
-export const testDB = async () => {
+export const authenticateDB = async () => {
   try {
-    await sequelize.authenticate();
+    await sequelize.authenticate({ logging: false });
+    console.log("db is seccessful");
   } catch (error) {
     console.log(error);
   }
 };
 
-export const syncDB = async () => {
+export const syncModels = async () => {
   try {
-    await sequelize.sync({ logging: false });
+    await sequelize.sync();
+    console.log("db is synced");
   } catch (error) {
     console.log(error);
   }
