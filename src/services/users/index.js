@@ -1,5 +1,6 @@
 import express, { query } from "express";
 import User from "./modal.js";
+import Blog from "../blogs/model.js";
 import sequelize from "../../db/index.js";
 import { Op } from "sequelize";
 
@@ -24,10 +25,12 @@ router.get("/", async (req, res, next) => {
       };
     }
     const users = await User.findAll({
-      attributes: ["firstName", "lastName", "age", "country"],
+      //attributes: ["firstName", "lastName", "age", "country"],
       //   attributes: {
       //     exclude: ["country", "age"],
       //   },
+      include: Blog, // User.hasMany(Blog);
+
       where: query,
     });
 

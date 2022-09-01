@@ -19,7 +19,7 @@ export const authenticateDB = async () => {
 
 export const syncModels = async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log("db is synced");
   } catch (error) {
     console.log(error);
